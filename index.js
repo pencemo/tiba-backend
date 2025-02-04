@@ -21,12 +21,13 @@ app.use(cors({
 app.use("/api/auth", router); //  Set up router for /api/auth
 
 app.get("/", (req, res) => {
+  console.log('app is redy');
   res.send("Hello World!");
 });
 
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "./index.html"));
-});
+// app.get("/login", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./index.html"));
+// });
 
 app.post("/mail", (req, res) => {
   const mail = req.body.mail;
