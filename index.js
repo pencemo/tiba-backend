@@ -14,8 +14,9 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    // origin: 'http://localhost:5173',
     credentials: true,
+    origin: "*",
 }))
 
 app.use("/api/auth", router); //  Set up router for /api/auth
@@ -26,7 +27,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api", (req, res) => {
-  res.send("Hello World!");
+  res.send("API Testing!");
+})
+
+app.get("/test", (req, res) => {
+  res.status(200).json({name: "API Testing!"});
 })
 app.post("/api", (req, res) => {
   const name = req.body.name;
