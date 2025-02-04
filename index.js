@@ -25,6 +25,13 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/api", (req, res) => {
+  res.send("Hello World!");
+})
+app.post("/api", (req, res) => {
+  const name = req.body.name;
+  res.send(`Hello ${name}!`);
+})
 // app.get("/login", (req, res) => {
 //   res.sendFile(path.join(__dirname, "./index.html"));
 // });
