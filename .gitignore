@@ -71,3 +71,4 @@ jest-output/
 *.bak
 *.orig
 *.log
+.vercel
