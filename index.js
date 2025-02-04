@@ -32,9 +32,6 @@ app.post("/api", (req, res) => {
   const name = req.body.name;
   res.send(`Hello ${name}!`);
 })
-// app.get("/login", (req, res) => {
-//   res.sendFile(path.join(__dirname, "./index.html"));
-// });
 
 app.post("/mail", (req, res) => {
   const mail = req.body.mail;
