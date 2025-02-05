@@ -28,7 +28,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/data", async (req, res) => {
+  console.time('MongoDB Query');
   const data = await User.find();
+  console.timeEnd('MongoDB Query');
   if(!data){
     res.status(404).json({
       success: false,
