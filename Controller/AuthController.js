@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { sendMail } from "../Util/SendMail.js";
 
 // login controller
-const loging = async (req, res) => {
+const login = async (req, res) => {
   if (!req.body.email || !req.body.password) {
     res
       .status(400)
@@ -30,7 +30,7 @@ const loging = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: "none",//process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
     });
     res
@@ -79,7 +79,7 @@ const createUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: "none", // process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
     });
 
@@ -111,7 +111,7 @@ const logOut = async (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      sameSite: "none", // process.env.NODE_ENV === "production" ? "none" : "strict",
     });
     res.status(200).json({ success: true, message: "User logged out" });
   } catch (err) {
@@ -160,6 +160,9 @@ const verifyUser = async (req, res) => {
 
 // is Outh
 const isOuth = async (req, res) => {
+  if(!req.cookies.token){
+    return res.status(401).json({ success: false, message: "User not authenticated" });
+  }
   try {
     const user = await User.findById(req.body.userId);
     const {password, ...other} = user._doc;
@@ -172,4 +175,4 @@ const isOuth = async (req, res) => {
   }
 }
 
-export { loging, createUser, logOut, verifyUser, isOuth};
+export { login, createUser, logOut, verifyUser, isOuth};

@@ -22,21 +22,9 @@ app.use(cors({
 app.use("/api/auth", router); //  Set up router for /api/auth
 
 app.get("/", (req, res) => {
-  console.log('app is redy');
   res.send("Hello World!");
 });
 
-app.get("/api", (req, res) => {
-  res.send("API Testing!");
-})
-
-app.get("/test", (req, res) => {
-  res.status(200).json({name: "API Testing!"});
-})
-app.post("/api", (req, res) => {
-  const name = req.body.name;
-  res.send(`Hello ${name}!`);
-})
 
 app.post("/mail", (req, res) => {
   const mail = req.body.mail;
