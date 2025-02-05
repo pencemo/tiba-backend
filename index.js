@@ -17,6 +17,7 @@ app.use(cors({
     // origin: 'http://localhost:5173',
     credentials: true,
     origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
 }))
 
 app.use("/api/auth", router); //  Set up router for /api/auth
