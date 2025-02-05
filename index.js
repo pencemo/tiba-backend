@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { sendMail } from "./Util/SendMail.js";
+import { User } from "./db/Model.js";
 dotenv.config();
 const __dirname = path.resolve();
 
@@ -25,6 +26,22 @@ app.use("/api/auth", router); //  Set up router for /api/auth
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.get("/data", async (req, res) => {
+  const data = await User.find();
+  if(!data){
+    res.status(404).json({
+      success: false,
+      message: "Data not found",
+    });
+  }else{
+    res.status(200).json({
+      success: true,
+      message: "Data found",
+      data: data,
+    });
+  }
+})
 
 
 app.post("/mail", (req, res) => {
