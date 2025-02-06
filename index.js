@@ -69,9 +69,10 @@ app.post("/mail", (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  dbConnection();  //  Create a new database connection
-  console.log("Server running :",'\x1b[36m\x1b[4mhttp://localhost:3000\x1b[0m');
-});
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => {
+//   dbConnection();  //  Create a new database connection
+//   console.log("Server running :",'\x1b[36m\x1b[4mhttp://localhost:3000\x1b[0m');
+// });
 
+module.exports = app;
