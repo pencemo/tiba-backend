@@ -1,7 +1,10 @@
 import express from 'express';
-import { User } from '../db/Model.js';
-const router = express.Router();
+import { allUsers, toggleUserStatus } from '../Controller/UsersData.js';
+import { authUserMiddleware } from '../Middleware/authMiddleWare.js';
+import { adminMiddleware } from '../Middleware/adminMidd.js';
+const adminRouter = express.Router();
 
+adminRouter.get('/user-list',authUserMiddleware, adminMiddleware, allUsers)
+adminRouter.post('/toggle-user-status', authUserMiddleware, adminMiddleware, toggleUserStatus)
 
-
-export default router;
+export default adminRouter;

@@ -8,6 +8,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { sendMail } from "./Util/SendMail.js";
 import { User } from "./db/Model.js";
+import adminRouter from "./Routes/AdminRoutes.js";
+import { carRoute } from "./Routes/CarDataRoutes.js";
 dotenv.config();
 const __dirname = path.resolve();
 
@@ -15,13 +17,15 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-    // origin: 'http://localhost:5173',
+    origin: 'http://localhost:5173',
+    // origin: "*",
     credentials: true,
-    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
 }))
 
 app.use("/api/auth", router); //  Set up router for /api/auth
+app.use("/api/admin", adminRouter)
+app.use("/api/cars", carRoute)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -69,10 +73,9 @@ app.post("/mail", (req, res) => {
   }
 });
 
-// const port = process.env.PORT || 3000;
-// app.listen(port, () => {
-//   dbConnection();  //  Create a new database connection
-//   console.log("Server running :",'\x1b[36m\x1b[4mhttp://localhost:3000\x1b[0m');
-// });
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  dbConnection();  //  Create a new database connection
+  console.log("Server running :",'\x1b[36m\x1b[4mhttp://localhost:3000\x1b[0m');
+});
 
-module.exports = app;

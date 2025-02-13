@@ -2,7 +2,8 @@ import { User } from "../db/Model.js";
 import bcript from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendMail } from "../Util/SendMail.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 // login controller
 const login = async (req, res) => {
   if (!req.body.email || !req.body.password) {
@@ -27,12 +28,21 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "10d",
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",//process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-    });
+
+    try {
+      
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite:"none", //process.env.NODE_ENV === "production" ? "lax" : "none",
+        maxAge: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 10 days, // 10 days
+      });
+    }catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error to set cookie" });
+    }
     res
       .status(200)
       .json({
