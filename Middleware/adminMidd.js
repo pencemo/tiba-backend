@@ -8,9 +8,9 @@ const adminMiddleware = async (req, res, next) => {
     try{
         const data = await User.findById(userId);
         if(!data){
-            return res.status(404).json({success: false, message: "User not found"});
+            return res.status(404).json({success: false, message: "Admin not found"});
         }
-        if(data.role !== "admin"){
+        if(data.isAdmin === false){
             return res.status(401).json({success: false, message: "Unauthorized"});
         }
         next();

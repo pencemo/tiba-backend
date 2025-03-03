@@ -23,9 +23,9 @@ const allUsers = async(req, res)=> {
 }
 
 const toggleUserStatus = async(req, res)=> {
-    const userId = req.body.toggleUser;
+    const {id, status} = req.body;
     try{
-        const users = await User.findOneAndUpdate({_id: userId}, { $set: { status: !req.body.status }});
+        const users = await User.findOneAndUpdate({_id: id}, { $set: { isActive: !status }});
 
         
         if(!users){

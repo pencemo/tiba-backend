@@ -3,6 +3,7 @@ import bcript from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendMail } from "../Util/SendMail.js";
 import dotenv from "dotenv";
+import { notification } from "./NotifictionController.js";
 dotenv.config();
 // login controller
 const login = async (req, res) => {
@@ -77,35 +78,42 @@ const createUser = async (req, res) => {
     const encryptedPassword = await bcript.hash(password, 10);
     if (!encryptedPassword) return res.status(400).json({ success: false, message: "Error to encript password" });
 
-    const otp = String(Math.floor(100000 + Math.random() * 900000));
-    const codeExpires = Date.now() + 5 * 60 * 1000; // 10 minutes
-    const newUser = new User({ name, email, password: encryptedPassword, verificationCode: otp, codeExpires });
+    // const otp = String(Math.floor(100000 + Math.random() * 900000));
+    // const codeExpires = Date.now() + 5 * 60 * 1000; // 10 minutes
+    const newUser = new User({ name, email, password: encryptedPassword });
     await newUser.save();
+    await notification("newUser", true, 'New User Joined', `${name} has joined the platform`)
 
+    if(!newUser) return res.status(400).json({ success: false, message: "Error to create user" })
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "10d",
     });
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none", // process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+      secure: true,
+      sameSite:"none", //process.env.NODE_ENV === "production" ? "lax" : "none",
+      maxAge: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 10 days, // 10 days
     });
+    
+    const userObject = newUser.toObject(); 
 
-
+    // Exclude the sensitive fields
+    const { verificationCode, codeExpires, ...userData } = userObject;
+    delete userData.password;
+    
     res.status(201).json({
       success: true,
       message: "User created successfully",
-      data: newUser,
+      data: userData,
     });
-    const mailOptions = {
-      from: process.env.SEND_MAIL,
-      to: email,
-      subject: 'Welcome to our website',
-      // text: `Welcome to our website ${name} your otp is ${otp}`,
-      html: `<h4>Welcome to our website ${name}</h4><br><h3>Your otp is ${otp}</h3>`,    }
-    sendMail(mailOptions)
+    // const mailOptions = {
+    //   from: process.env.SEND_MAIL,
+    //   to: email,
+    //   subject: 'Welcome to our website',
+    //   // text: `Welcome to our website ${name} your otp is ${otp}`,
+    //   html: `<h4>Welcome to our website ${name}</h4><br><h3>Your otp is ${otp}</h3>`,    }
+    // sendMail(mailOptions)
   } catch (err) {
     console.log(err);
     return res
@@ -116,12 +124,11 @@ const createUser = async (req, res) => {
 
 // logout controller
 const logOut = async (req, res) => {
-  console.log(req.body.userId);
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none", // process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: true,
+      sameSite:"none", // process.env.NODE_ENV === "production" ? "none" : "strict",
     });
     res.status(200).json({ success: true, message: "User logged out" });
   } catch (err) {
