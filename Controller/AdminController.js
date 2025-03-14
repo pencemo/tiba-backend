@@ -77,7 +77,7 @@ const dashboard = async (req, res) => {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    const totalUsers =  await User.countDocuments({ role: "user" })  // Only admin can see total users
+    const totalUsers =  await User.countDocuments({ role: "user" }) || 0 // Only admin can see total users
     const totalBooking = await Booking.countDocuments(bookingFilter); // Apply booking filter
     const totalRev = await Booking.aggregate([
       { $match: bookingFilter }, 

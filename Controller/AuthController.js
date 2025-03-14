@@ -35,7 +35,7 @@ const login = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        sameSite:"none", //process.env.NODE_ENV === "production" ? "lax" : "none",
+        sameSite:"None", //process.env.NODE_ENV === "production" ? "lax" : "none",
         maxAge: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 10 days, // 10 days
       });
     }catch (err) {
@@ -92,9 +92,9 @@ const createUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite:"none", //process.env.NODE_ENV === "production" ? "lax" : "none",
+      sameSite:"None", //process.env.NODE_ENV === "production" ? "lax" : "none",
       maxAge: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 10 days, // 10 days
-    });
+    }); 
     
     const userObject = newUser.toObject(); 
 
