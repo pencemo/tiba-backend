@@ -18,7 +18,7 @@ app.use(urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.NODE_ENV === "development" ? 'http://localhost:5173': 'https://demo.neptunemark.com',
     // origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -41,6 +41,6 @@ app.get("/", (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   dbConnection();
-  console.log("Server running : http://localhost:3000");
+  console.log("Server running 🚀");
 });
 

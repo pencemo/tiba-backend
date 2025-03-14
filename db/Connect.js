@@ -9,7 +9,7 @@ const connectUrl = dev ? "mongodb://localhost:27017/myapp" : url;
 export const dbConnection = async () => {
     try{
         await mongoose.connect(connectUrl)
-            .then(() => console.log("Connected to DB"))
+            .then(() => console.log("Connected to DB ✨"))
             .catch((err) => console.log(err));
     }catch(err){
         console.log(err);
