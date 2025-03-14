@@ -94,6 +94,14 @@ const carSchema = mongoose.Schema(
       type: Schema.Types.Decimal128,
       required: true,
     },
+    weekly_rate: {
+      type: Schema.Types.Decimal128,
+      required: true,
+    },
+    monthly_rate: {
+      type: Schema.Types.Decimal128,
+      required: true,
+    },
     available: {
       type: Boolean,
       default: true,
@@ -105,8 +113,7 @@ const carSchema = mongoose.Schema(
     },
     admin_id: {
       type: Schema.Types.ObjectId,
-      ref: "users",
-      required: true,
+      ref: "users", 
     },
     images: {
       type: [String],

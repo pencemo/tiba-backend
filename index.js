@@ -15,6 +15,7 @@ const __dirname = path.resolve();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use('/public', express.static('public'));
 app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -40,6 +41,6 @@ app.get("/", (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   dbConnection();
-  console.log("Server running :",'\x1b[36m\x1b[4mhttp://localhost:3000\x1b[0m');
+  console.log("Server running : http://localhost:3000");
 });
 

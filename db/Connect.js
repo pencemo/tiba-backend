@@ -8,10 +8,10 @@ const dev = process.env.NODE_ENV === "development";
 const connectUrl = dev ? "mongodb://localhost:27017/myapp" : url;
 export const dbConnection = async () => {
     try{
-        await mongoose.connect(url)
+        await mongoose.connect(connectUrl)
             .then(() => console.log("Connected to DB"))
             .catch((err) => console.log(err));
     }catch(err){
         console.log(err);
     }
-}
+} 

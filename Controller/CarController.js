@@ -2,22 +2,13 @@ import { Cars, User } from "../db/Model.js";
 
 // add cars
 const addCars = async (req, res) => {
+  const files = req.files;
   const {
-    make,
-    model,
-    year,
-    color,
-    mileage,
-    transmission,
-    fuel_type,
-    seats,
-    daily_rate,
-    category,
-    images,
-    available,
-    showroomId,
-    userId,
+    make, model, year, color, mileage, transmission, fuel_type,
+    seats, daily_rate, category, available, showroomId, userId,
+    monthly_rate, weekly_rate,
   } = req.body;
+
   try {
     if (
       !make ||
@@ -26,13 +17,20 @@ const addCars = async (req, res) => {
       !transmission ||
       !fuel_type ||
       !daily_rate ||
-      !images
+      !monthly_rate ||
+      !weekly_rate
     ) {
       return res
         .status(400)
         .json({ success: false, message: "Please fill all fields" });
     }
 
+    let images = [];
+
+    if(files){
+      images = files.map((file) => `/public/images/${file.filename}`);
+    }
+console.log(userId);
     const newCar = new Cars({
       make,
       model,
@@ -43,6 +41,8 @@ const addCars = async (req, res) => {
       fuel_type,
       seats,
       daily_rate,
+      monthly_rate,
+      weekly_rate,
       showroomId,
       images,
       available,
@@ -72,6 +72,8 @@ const editCar = async (req, res) => {
     fuel_type,
     seats,
     daily_rate,
+    monthly_rate,
+    weekly_rate,
     category,
     images,
     available,
