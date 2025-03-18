@@ -30,7 +30,8 @@ const addCars = async (req, res) => {
     if(files){
       images = files.map((file) => `/public/images/${file.filename}`);
     }
-console.log(userId);
+
+    
     const newCar = new Cars({
       make,
       model,

@@ -18,8 +18,8 @@ app.use(urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 app.use(cookieParser());
 app.use(cors({
-    // origin: process.env.NODE_ENV === "development" ? 'http://localhost:5173': 'https://demo.neptunemark.com',
-    origin: 'https://demo.neptunemark.com',
+    origin: process.env.NODE_ENV === "development" ? 'http://localhost:5173': 'https://demo.neptunemark.com',
+    // origin: 'https://demo.neptunemark.com',
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }))

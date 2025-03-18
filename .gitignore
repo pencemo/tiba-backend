@@ -28,6 +28,7 @@ lerna-debug.log
 
 # Build artifacts
 build/
+public/
 dist/
 .next/
 out/

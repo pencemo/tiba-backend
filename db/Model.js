@@ -265,10 +265,33 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
+const messagesSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  contact:{
+    type: String,
+    required: true,
+  },
+  message: {
+    type: String,
+    required: true,
+  }
+},{
+  timestamps: true
+});
+
+
 const User = mongoose.model("users", userSchema);
 const Cars = mongoose.model("cars", carSchema);
 const Showroom = mongoose.model("showroom", showroomSchema);
 const Booking = mongoose.model("booking", bookingSchema);
 const Notification = mongoose.model("notification", notificationSchema);
+const Message = mongoose.model("message", messagesSchema);
 
-export { User, Cars, Showroom, Notification, Booking };
+export { User, Cars, Showroom, Notification, Booking, Message };

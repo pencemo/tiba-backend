@@ -89,9 +89,26 @@ const updateStatusofNotific = async (req, res) => {
     }
 };
 
+const userNotification = async (req, res) => {
+    try {
+        const {userId}=req.body
+        if(userId){
+            const notification = await Notification.find({userId:userId, isForAdmin: false}).sort({ createdAt: -1 })
+            const notificationCount = await Notification.countDocuments({userId:userId, isForAdmin: false, isRead: false })
+            return res
+            .status(200)
+            .json({ success: true, data: {notification, count: notificationCount } });
+        }
+        
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+}
+
 export {
     notification,
     newNotification,
     adminNotification,
-    updateStatusofNotific
+    updateStatusofNotific,
+    userNotification
 }
