@@ -4,7 +4,7 @@ import { authUserMiddleware } from '../Middleware/authMiddleWare.js';
 const bookingRoute = express.Router();
 
 bookingRoute.post('/create-order', createOrder)
-bookingRoute.post('/verify-payment', verificarion)
+bookingRoute.post('/verify-payment',authUserMiddleware, verificarion)
 bookingRoute.get('/payments', payments)
 
 bookingRoute.get('/all-bookings', authUserMiddleware, allBookings)

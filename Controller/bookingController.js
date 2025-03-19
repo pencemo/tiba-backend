@@ -42,6 +42,7 @@ const createOrder = async (req, res) => {
 };
 
 const verificarion = (req, res) => {
+
   const { order_id, payment_id, signature, formData } = req.body;
 
   if (!order_id || !payment_id || !signature) {
@@ -65,7 +66,8 @@ const verificarion = (req, res) => {
       order_id,
     });
     booking.save();
-    notification("newBooking", true, 'Booking Confirmed!', `New Booking has been received from ${formData.name}. Review the details and ensure everything is set.`, formData.showroomId)
+    notification("newBooking", true, 'Booking Received!', `New Booking has been received from ${formData.name}. Review the details and ensure everything is set.`, formData.showroomId)
+    notification("newBooking", false, 'Booking Confirmed!', `Your car rental booking has been successfully confirmed! We’re excited to have you on board`, booking.userId)
     return res
       .status(200)
       .json({ success: true, message: "Payment verified successfully" });
@@ -248,6 +250,7 @@ const changeStatus = async (req, res) => {
     }
     booking.status = newStatus; 
     await booking.save();
+    notification("newBooking", false, 'Status Updated!', `Status of your booking has been updated`, booking.userId)
     return res
       .status(200)
       .json({ success: true, message: "Booking status updated successfully" });

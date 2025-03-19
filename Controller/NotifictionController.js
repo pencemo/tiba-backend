@@ -107,7 +107,7 @@ const userNotification = async (req, res) => {
 
 export {
     notification,
-    newNotification,
+    // newNotification,
     adminNotification,
     updateStatusofNotific,
     userNotification
