@@ -15,7 +15,7 @@ const __dirname = path.resolve();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use('/public', express.static('public'));
+app.use('/public', express.static('/data/public'));
 app.use(cookieParser());
 app.use(cors({
     origin: process.env.NODE_ENV === "development" ? 'http://localhost:5173': 'https://demo.neptunemark.com',
