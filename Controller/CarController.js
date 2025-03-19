@@ -28,7 +28,7 @@ const addCars = async (req, res) => {
     let images = [];
 
     if(files){
-      images = files.map((file) => `/public/images/${file.filename}`);
+      images = files.map((file) => `/public/${file.filename}`);
     }
 
     
