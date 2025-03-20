@@ -2,7 +2,7 @@ import { createTransport } from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
-var transporter = createTransport({
+export const transporter = createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
   secure: false,
