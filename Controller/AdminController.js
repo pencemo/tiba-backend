@@ -152,6 +152,39 @@ const chartData = await Booking.aggregate([
   }
 ]);
 
+const result = await Booking.aggregate([
+  // Step 1: Join with the Showroom collection
+  {
+    $lookup: {
+      from: 'showrooms', // The collection to join with
+      localField: 'showroomId', // Field from the bookings collection
+      foreignField: '_id', // Field from the showrooms collection
+      as: 'showroomDetails', // Output array field
+    },
+  },
+  // Step 2: Unwind the joined showroom details (since $lookup returns an array)
+  {
+    $unwind: '$showroomDetails',
+  },
+  // Step 3: Group by showroomId and count bookings
+  {
+    $group: {
+      _id: '$showroomId', // Group by showroomId
+      totalBookings: { $sum: 1 }, // Count total bookings
+      showroomName: { $first: '$showroomDetails.name' }, // Get the showroom name
+    },
+  },
+  // Step 4: Format the output
+  {
+    $project: {
+      _id: 0, // Exclude the default _id field
+      id: '$_id', // Showroom ID
+      bookings: '$totalBookings', // Total bookings
+      showroomname: '$showroomName', // Showroom name
+      
+    },
+  },
+]);
     // Return the response
     return res.status(200).json({
       success: true,
@@ -161,7 +194,8 @@ const chartData = await Booking.aggregate([
         thisMonthBooking,
         totalAmount: totalAmount,
         pendign: pendingBooking,
-        chartData
+        chartData,
+        bookingDetails: result,
       }
     });
 

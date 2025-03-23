@@ -11,7 +11,7 @@ carRoute.get('/all-cars', authUserMiddleware, allCars)
 carRoute.get('/all-cars-user', allCarsUser)
 carRoute.get('/oneCar', oneCar)
 carRoute.post('/delete',authUserMiddleware, deleteCar)
-carRoute.post('/edit-car',authUserMiddleware, editCar)
+carRoute.post('/edit-car',authUserMiddleware, upload.array('files', 5), editCar)
 carRoute.post('/chageStatus',authUserMiddleware, changeStatus)
 carRoute.post('/image', upload.array('files', 5), uploadFiles)
 

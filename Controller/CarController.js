@@ -1,5 +1,6 @@
 import { Cars, User } from "../db/Model.js";
-
+import fs from "fs";
+import path from "path";
 // add cars
 const addCars = async (req, res) => {
   const files = req.files;
@@ -62,37 +63,64 @@ const addCars = async (req, res) => {
 };
 
 const editCar = async (req, res) => {
-  const {
-    _id,
-    make,
-    model,
-    year,
-    color,
-    mileage,
-    transmission,
-    fuel_type,
-    seats,
-    daily_rate,
-    monthly_rate,
-    weekly_rate,
-    category,
-    images,
-    available,
-  } = req.body;
+  const { _id, make, model, year, color, mileage,
+    transmission, fuel_type, seats, daily_rate,
+    monthly_rate, weekly_rate, category, images,
+    available, deleteImages } = req.body;
+    const {files}= req;
   try {
-    if (
-      !make ||
-      !model ||
-      !year ||
-      !transmission ||
-      !fuel_type ||
-      !daily_rate ||
-      !images
-    ) {
+    
+    if ( !make || !model ||
+      !year || !transmission ||
+      !fuel_type || !daily_rate ||
+      !monthly_rate || !weekly_rate ) {
+
       return res
         .status(400)
-        .json({ success: false, message: "Please fill all fields" });
-    }
+        .json({ success: false, message: "Please fill all fields" }); }
+
+        if (deleteImages && deleteImages.length > 0) {
+          try {
+            const deleteImageFiles = (images) => {
+              images.forEach(image => {
+                const filePath = path.join('/data', image);
+                if (fs.existsSync(filePath)) {
+                  fs.unlinkSync(filePath);
+                } else {
+                  console.log(`File not found: ${filePath}`);
+                }
+              });
+            };
+    
+            if (typeof deleteImages === 'string') {
+              deleteImageFiles([deleteImages]);
+            } else {
+              deleteImageFiles(deleteImages);
+            }
+          } catch (err) {
+            return res.status(500).json({ success: false, message: "Error deleting images", error: err });
+          }
+        }
+    
+    
+        let newImages = [];
+        try{
+          if (files && files.length > 0) {
+            const imagesLink = files.map(file => `/public/${file.filename}`);
+            if (images) {
+              newImages = typeof images === 'string' ? [images, ...imagesLink] : [...images, ...imagesLink];
+            }else {
+              newImages = imagesLink;
+            }
+          } else if (images) {
+            newImages = typeof images === 'string' ? [images] : images;
+          }
+
+        }catch(err){
+          return res.status(500).json({ success: false, message: "Error adding images", error: err });
+        }
+
+    // const newImages = [...images, ...imagesLink];
     const newObj = {
       make,
       model,
@@ -103,7 +131,9 @@ const editCar = async (req, res) => {
       fuel_type,
       seats,
       daily_rate,
-      images,
+      monthly_rate,
+      weekly_rate,
+      images: newImages,
       available,
       category,
     };
@@ -114,7 +144,7 @@ const editCar = async (req, res) => {
     }
     res
       .status(201)
-      .json({ success: true, message: "Car added successfully", newCar });
+      .json({ success: true, message: "Car data edited successfully", newCar });
   } catch (err) {
     res
       .status(500)
@@ -284,5 +314,6 @@ const changeStatus = async (req, res) => {
       .json({ success: false, message: "Internal server error", err });
   }
 }
+
 
 export { addCars, allCars, deleteCar, oneCar, allCarsUser, editCar, changeStatus };
