@@ -11,6 +11,7 @@ import { carRoute } from "./Routes/CarDataRoutes.js";
 import bookingRoute from "./Routes/bookingRoutes.js";
 import notificationRoute from "./Routes/NotificationRoutes.js";
 import userRoute from "./Routes/userRoutes.js";
+import paymentRoute from "./Routes/paymentRoutes.js";
 dotenv.config();
 const __dirname = path.resolve();
 
@@ -29,6 +30,7 @@ app.use("/api/auth", router);
 app.use("/api/admin", adminRouter)
 app.use("/api/cars", carRoute)
 app.use("/api/booking", bookingRoute)
+app.use("/api/payment", paymentRoute)
 app.use("/api/notification", notificationRoute)
 app.use("/api/user", userRoute)
 

@@ -3,7 +3,7 @@ import { allBookings, changeStatus, createOrder, dateCheck, payments, verificari
 import { authUserMiddleware } from '../Middleware/authMiddleWare.js';
 const bookingRoute = express.Router();
 
-bookingRoute.post('/create-order', createOrder)
+// bookingRoute.post('/create-order', createOrder)
 bookingRoute.post('/verify-payment',authUserMiddleware, verificarion)
 bookingRoute.get('/payments', payments)
 
