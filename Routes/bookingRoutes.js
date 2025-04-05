@@ -1,10 +1,9 @@
 import express from 'express';
-import { allBookings, changeStatus, createOrder, dateCheck, payments, verificarion } from '../Controller/bookingController.js';
+import { allBookings, changeStatus, crateBooking, dateCheck, payments } from '../Controller/bookingController.js';
 import { authUserMiddleware } from '../Middleware/authMiddleWare.js';
 const bookingRoute = express.Router();
 
-// bookingRoute.post('/create-order', createOrder)
-bookingRoute.post('/verify-payment',authUserMiddleware, verificarion)
+bookingRoute.post('/create',authUserMiddleware, crateBooking)
 bookingRoute.get('/payments', payments)
 
 bookingRoute.get('/all-bookings', authUserMiddleware, allBookings)

@@ -1,102 +1,72 @@
-import Razorpay from "razorpay";
 import dotenv from "dotenv";
-import crypto from "crypto";
 import { Booking, User } from "../db/Model.js";
 import { notification } from "./NotifictionController.js";
 dotenv.config();
+import Stripe from "stripe";
 
-const key_id = process.env.RAZORPAY_KEY_ID;
-const key_secret = process.env.RAZORPAY_KEY_SECRET;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); 
 
-const razorpay = new Razorpay({
-  key_id,
-  key_secret,
-});
-
-const createOrder = async (req, res) => {
-  const { amount, currency, receipt } = req.body;
-
-  const options = {
-    amount: amount * 100, // Razorpay expects amount in paise (e.g., 100 INR = 10000 paise)
-    currency,
-    receipt,
-    payment_capture: 1, // Auto-capture payment
-  };
+const crateBooking = async (req, res) => {
+  const {
+    name,
+    email,
+    contact,
+    userId,
+    carId,
+    showroomId,
+    totalCost,
+    date,
+    paymentIntentId, // Include this
+  } = req.body;
 
   try {
-    const response = await razorpay.orders.create(options);
-    if (!response) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Error creating order" });
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    if (paymentIntent.status !== "succeeded") {
+      return res.status(400).json({ success: false, message: "Payment not confirmed." });
     }
-    res.json({
-      id: response.id,
-      currency: response.currency,
-      amount: response.amount,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error creating order" });
-  }
-};
 
-const verificarion = (req, res) => {
-
-  const { order_id, payment_id, signature, formData } = req.body;
-
-  if (!order_id || !payment_id || !signature) {
-    return res.status(400).json({ success: false, message: "Invalid request" });
-  }
-
-  const generatedSignature = crypto
-    .createHmac("sha256", key_secret)
-    .update(order_id + "|" + payment_id)
-    .digest("hex");
-
-  if (generatedSignature === signature) {
-    if (!formData) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid request" });
-    }
     const booking = new Booking({
-      ...formData,
-      payment_id,
-      order_id,
+      name,
+      email,
+      contact,
+      userId,
+      carId,
+      showroomId,
+      totalCost,
+      date,
+      payment: {
+        id: paymentIntent.id,
+        status: paymentIntent.status,
+        amount: paymentIntent.amount / 100, // back to AED
+        currency: paymentIntent.currency,
+      },
     });
-    booking.save();
-    notification("newBooking", true, 'Booking Received!', `New Booking has been received from ${formData.name}. Review the details and ensure everything is set.`, formData.showroomId)
-    notification("newBooking", false, 'Booking Confirmed!', `Your car rental booking has been successfully confirmed! We’re excited to have you on board`, booking.userId)
-    return res
-      .status(200)
-      .json({ success: true, message: "Payment verified successfully" });
-  } else {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid signature" });
+
+    await booking.save();
+
+    res.status(200).json({ success: true, booking });
+  } catch (err) {
+    console.error("Booking save error:", err);
+    res.status(500).json({ success: false, message: "Booking failed." });
   }
 };
 
 const payments = async (req, res) => {
   try {
-    const { count, skip } = req.query;
-
-    // Fetch payments from Razorpay
-    const payments = await razorpay.payments.all({
-      count: count || 10, // Number of payments to fetch (default: 10)
-      skip: skip || 0, // Number of payments to skip (default: 0)
+    const { count, starting_after, ending_before} = req.query;
+    const payments = await stripe.paymentIntents.list({
+      limit: count, 
+      ...(starting_after && { starting_after }),
+      ...(ending_before && { ending_before }),
     });
-    if (!payments) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Error fetching payments" });
-    }
-    res.json(payments);
-  } catch (error) {
-    console.error("Error fetching payments:", error);
-    res.status(500).json({ error: "Failed to fetch payments" });
+
+    res.status(200).json({ success: true, payments: payments });
+  } catch (err) {
+    console.error("Error fetching payments:", err);
+    res.status(500).json({ success: false, message: "Failed to retrieve payments" });
   }
+ 
 };
 
 const allBookings = async (req, res) => {
@@ -301,4 +271,4 @@ const dateCheck = async (req, res) => {
   }
 };
 
-export { createOrder, verificarion, payments, allBookings, changeStatus, dateCheck };
+export { payments, allBookings, changeStatus, dateCheck, crateBooking };

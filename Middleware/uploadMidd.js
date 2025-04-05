@@ -4,7 +4,7 @@ import fs from "fs";
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = "/data/public"; // Railway Volume mount path
+    const uploadDir = "/mnt/public"; // Railway Volume mount path
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true }); // Create the directory if it doesn't exist
     }

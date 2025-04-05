@@ -222,25 +222,16 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    payment_id:{
-      type: String,
+    payment:{
+      type: {
+        id: String,
+        amount: Number,
+        currency: String,
+        status: String,
+      },
       required: true,
     },
-    order_id:{
-        type: String,
-        required: true,
-    },
     
-    //   pickup_location_id: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Location", // References the Locations collection
-    //     required: true,
-    //   },
-    //   dropoff_location_id: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Location", // References the Locations collection
-    //     required: true,
-    //   },
     date: {
       type: { from: Date, to: Date },
       required: true,
