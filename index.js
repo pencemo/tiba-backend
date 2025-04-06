@@ -1,6 +1,5 @@
 import express, { json, urlencoded } from "express";
 const app = express();
-import path from "path";
 import { dbConnection } from "./db/Connect.js";
 import { router } from "./Routes/AuthRoutes.js";
 import cookieParser from "cookie-parser";
@@ -13,14 +12,13 @@ import notificationRoute from "./Routes/NotificationRoutes.js";
 import userRoute from "./Routes/userRoutes.js";
 import paymentRoute from "./Routes/paymentRoutes.js";
 dotenv.config();
-const __dirname = path.resolve();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use('/public', express.static('/data/public'));
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.FRONTEND_URL, // === "development" ? 'http://localhost:5173': 'https://tibarentacar.com',
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }))
@@ -36,7 +34,7 @@ app.use("/api/user", userRoute)
 
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("App running successfull!");
 });
 
 

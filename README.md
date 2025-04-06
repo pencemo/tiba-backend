@@ -1,4 +1,4 @@
-# MERN Stack Project
+# Tiba rent a car
 
 ## 🛠️ Overview  
 This is a **MERN (MongoDB, Express, React, Node.js)** stack application. It serves as a full-stack web application with a backend powered by **Node.js** and **Express**, a frontend built with **React**, and **MongoDB** as the database.
@@ -14,16 +14,7 @@ This is a **MERN (MongoDB, Express, React, Node.js)** stack application. It serv
 │   ├── controllers/# Business logic
 │   ├── config/     # Environment & DB configurations
 │   ├── server.js   # Main server file
-│
-│── frontend/       # React frontend
-│   ├── src/        # Source code
-│   ├── public/     # Static files
-│   ├── package.json# Frontend dependencies
-│
-│── .gitignore      # Files to exclude from Git
-│── README.md       # Documentation
-│── package.json    # Backend dependencies
-│── .env            # Environment variables
+
 ```
 
 ---
@@ -42,10 +33,6 @@ Make sure you have **Node.js** and **MongoDB** installed:
 # Backend
 cd backend
 npm install
-
-# Frontend
-cd ../frontend
-npm install
 ```
 
 ### 3️⃣ Run the Application  
@@ -54,12 +41,6 @@ npm install
 ```bash
 cd backend
 npm run dev
-```
-
-#### Start the Frontend Server  
-```bash
-cd frontend
-npm start
 ```
 
 ---
@@ -81,16 +62,6 @@ JWT_SECRET=your_jwt_secret
 ✅ MongoDB Database  
 ✅ React Frontend with Redux  
 ✅ CRUD Operations  
-
----
-
-## 📜 License  
-This project is **open-source** and available under the [MIT License](LICENSE).
-
----
-
-## 🤝 Contributing  
-Feel free to contribute by submitting issues or pull requests.  
 
 ---
 
