@@ -221,6 +221,11 @@ const allCarsUser = async (req, res) => {
   try {
     const cars = await Cars.find()
       .sort({ createdAt: -1 })
+      .populate({
+          path: 'showroomId',
+          model: 'showroom',
+          // select: 'name email'
+      })
       .limit(limit)
       .skip((page - 1) * limit);
     const totalCars = await Cars.countDocuments();
@@ -258,7 +263,12 @@ const oneCar = async (req, res) => {
       .json({ success: false, message: "Please provide car id" });
   }
   try {
-    const car = await Cars.findById(id);
+    const car = await Cars.findById(id)
+        .populate({
+          path: 'showroomId',
+          model: 'showroom',
+          // select: 'name email'
+        })
     if (!car) {
       return res.status(404).json({ success: false, message: "Car not found" });
     }
