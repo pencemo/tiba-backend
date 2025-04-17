@@ -15,26 +15,26 @@ dotenv.config();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use('/public', express.static('/data/public'));
+app.use('/public', express.static('/mnt/public'));
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-  //   origin: (origin, callback) => {
-  //     const allowedOrigins = [
-  //         'https://tibarentacar.com',
-  //         'https://www.tibarentacar.com',
-  //         'https://api.tibarentacar.com'
-  //     ];
+    // origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+          'https://tibarentacar.com',
+          'https://www.tibarentacar.com',
+          'https://api.tibarentacar.com'
+      ];
       
-  //     // Allow requests with no origin (like mobile apps or curl requests)
-  //     if (!origin) return callback(null, true);
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
       
-  //     if (allowedOrigins.includes(origin)) {
-  //         return callback(null, true);
-  //     }
+      if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+      }
       
-  //     return callback(new Error(`Not allowed by CORS for origin: ${origin}`), false);
-  // },
+      return callback(new Error(`Not allowed by CORS for origin: ${origin}`), false);
+  },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }))

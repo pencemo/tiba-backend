@@ -90,6 +90,16 @@ const carSchema = mongoose.Schema(
     seats: {
       type: Number,
     },
+    type: {
+      type: String,
+    },
+    addOnCharge: {
+      type: Schema.Types.Decimal128,
+    },
+    features:{
+      type: [String],
+      default: [],
+    },
     daily_rate: {
       type: Schema.Types.Decimal128,
       required: true,

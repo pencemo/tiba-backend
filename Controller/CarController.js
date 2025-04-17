@@ -7,9 +7,9 @@ const addCars = async (req, res) => {
   const {
     make, model, year, color, mileage, transmission, fuel_type,
     seats, daily_rate, category, available, showroomId, userId,
-    monthly_rate, weekly_rate,
+    monthly_rate, weekly_rate, type, addOnCharge,features
   } = req.body;
-
+// return console.log(req.body); 
   try {
     if (
       !make ||
@@ -49,6 +49,9 @@ const addCars = async (req, res) => {
       images,
       available,
       category,
+      type,
+      addOnCharge,
+      features,
       admin_id: userId,
     });
     await newCar.save();
@@ -65,7 +68,7 @@ const addCars = async (req, res) => {
 const editCar = async (req, res) => {
   const { _id, make, model, year, color, mileage,
     transmission, fuel_type, seats, daily_rate,
-    monthly_rate, weekly_rate, category, images,
+    monthly_rate, weekly_rate, category, images,type,addOnCharge,features,
     available, deleteImages } = req.body;
     const {files}= req;
   try {
@@ -83,7 +86,7 @@ const editCar = async (req, res) => {
           try {
             const deleteImageFiles = (images) => {
               images.forEach(image => {
-                const filePath = path.join('/data', image);
+                const filePath = path.join('/mnt', image);
                 if (fs.existsSync(filePath)) {
                   fs.unlinkSync(filePath);
                 } else {
@@ -102,7 +105,7 @@ const editCar = async (req, res) => {
           }
         }
     
-    
+     
         let newImages = [];
         try{
           if (files && files.length > 0) {
@@ -119,7 +122,7 @@ const editCar = async (req, res) => {
         }catch(err){
           return res.status(500).json({ success: false, message: "Error adding images", error: err });
         }
-
+        const filtedFeat = features ? features.filter(feature => feature !== "") : []
     // const newImages = [...images, ...imagesLink];
     const newObj = {
       make,
@@ -136,6 +139,9 @@ const editCar = async (req, res) => {
       images: newImages,
       available,
       category,
+      type,
+      addOnCharge,
+      features: filtedFeat
     };
 
     const newCar = await Cars.findByIdAndUpdate(_id, newObj, { new: true });
@@ -220,11 +226,11 @@ const allCarsUser = async (req, res) => {
   const limit = req.query.limit || 10;
   try {
     const cars = await Cars.find()
-      .sort({ createdAt: -1 })
+      .sort({ available: -1 })
+      .sort({ make: 1 })
       .populate({
           path: 'showroomId',
           model: 'showroom',
-          // select: 'name email'
       })
       .limit(limit)
       .skip((page - 1) * limit);
